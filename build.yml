@@ -1,0 +1,67 @@
+# Demo pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+name: $(TeamProject).$(BuildDefinitionName).$(SourceBranchName).$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger:
+  branches:
+    include:
+    - master
+    - features/*
+
+pool:
+  vmImage: 'windows-latest'
+
+jobs:
+- job: BuildPipeline
+  timeoutInMinutes: 10
+  displayName: 'Build Pipeline'
+  steps:
+  
+  - script: 'choco install tflint -y'
+    displayName: 'Install tflint tool'
+    continueOnError: true
+
+  - script: 'tflint --force'
+    workingDirectory: tf
+    displayName: 'Terraform lint'
+
+  - task: PowerShell@2
+    inputs:
+      displayName: 'Validate JSON files'
+      targetType: 'inline'
+      script: "Invoke-Pester @{Path= './tests/ci/*.tests.ps1';} -OutputFile TEST-CI-JSON.xml -OutputFormat NUnitXML -EnableExit" 
+      timeoutInMinutes: 1
+
+  - task: PublishTestResults@2
+    displayName: 'Publish Test Results **/TEST-*.xml'
+    inputs:
+      testResultsFormat: NUnit
+      timeoutInMinutes: 1
+    condition: always()
+
+  - task: CopyFiles@2
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    displayName: 'Copy Files to Artifact folder'
+    inputs:
+      SourceFolder: '$(Build.SourcesDirectory)'
+      Contents: |
+        tests/**/*
+        examples/**/*
+        !tests/ci/**/*
+        tf/**/*
+        adf/**/*
+        README.md        
+        
+      TargetFolder: '$(build.artifactstagingdirectory)'
+      preserveTimestamp: true
+        
+  - task: PublishBuildArtifacts@1
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    displayName: 'Publish Artifact'
+    inputs: 
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'

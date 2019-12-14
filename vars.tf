@@ -2,14 +2,18 @@ variable "location" {
     type = string
 }
 
+variable "id" {
+    type = string
+}
+
 variable "environment" {
     type = string
 }
 
-variable "name" {
+variable "resource_group_name" {
     type = string
 }
 
-variable "resourceGroupName" {
+variable "usage" {
     type = string
 }
