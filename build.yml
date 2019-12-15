@@ -121,14 +121,14 @@ jobs:
       publishLocation: 'Container'
 
   - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV1@0
-  displayName: 'Terraform destroy'
-  inputs:
-    command: destroy
-    workingDirectory: '$(Tf.ConfigurationDirectory)'
-    environmentServiceNameAzureRM: '$(Subscription)'
-    backendServiceArm: 'MSDN Enterprise'
-    backendAzureRmResourceGroupName: '$(Tf.ResourceGroup)'
-    backendAzureRmStorageAccountName: '$(Tf.StorageAccount)'
-    backendAzureRmContainerName: '$(Tf.Container)'
-    backendAzureRmKey: '$(Tf.Key)'
-  condition: always()
+    displayName: 'Terraform destroy'
+    inputs:
+      command: destroy
+      workingDirectory: '$(Tf.ConfigurationDirectory)'
+      environmentServiceNameAzureRM: '$(Subscription)'
+      backendServiceArm: 'MSDN Enterprise'
+      backendAzureRmResourceGroupName: '$(Tf.ResourceGroup)'
+      backendAzureRmStorageAccountName: '$(Tf.StorageAccount)'
+      backendAzureRmContainerName: '$(Tf.Container)'
+      backendAzureRmKey: '$(Tf.Key)'
+    condition: always()      
