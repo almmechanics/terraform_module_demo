@@ -35,7 +35,7 @@ resource "azurerm_resource_group" "tester" {
 
 
 module "template" {
-    source = "../../terraform_module_demo"
+    source = "../"
     location = var.location
     id = var.id
     environment = format("%03s%03d",var.environment,random_integer.tester.result)
