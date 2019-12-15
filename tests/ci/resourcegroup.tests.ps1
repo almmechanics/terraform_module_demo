@@ -7,18 +7,18 @@ param
 Describe "Resource Group" {
 
     $rg = Get-AzResourceGroup $ResourceGroupName
-    $resName = $rg.ResourceGroupName
     Context "Resource Group common" {
-        It "Resource Group '$resName' exists" {
+        It "Resource Group '$ResourceGroupName' exists" {
             $rg | should not benullorempty
         }
 
-        It "Resource Group '$resName' located in uksouth" {
+        It "Resource Group '$ResourceGroupName' located in uksouth" {
             $rg.Location | should be 'uksouth'
         }
 
-        It "Two Azure resource exist in '$resName' " {
-            $rg.Count | should be 2
+        $resources = @(Get-AzResource -ResourceGroupName $ResourceGroupName)
+        It "Two Azure resource exist in '$ResourceGroupName' " {
+            $resources.Count | should be 2
         }
     }
 }
