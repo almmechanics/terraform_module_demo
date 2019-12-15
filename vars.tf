@@ -1,19 +1,19 @@
 variable "location" {
-    type = "string"
+  type = "string"
 }
 
 variable "id" {
-    type = "string"
+  type = "string"
 }
 
 variable "environment" {
-    type = "string"
+  type = "string"
 }
 
 variable "resource_group_name" {
-    type = "string"
+  type = "string"
 }
 
 variable "usage" {
-    type = "string"
+  type = "string"
 }
