@@ -101,7 +101,7 @@ jobs:
         *.tfvars
         README.md        
         
-      TargetFolder: '$(build.artifactstagingdirectory)'
+      TargetFolder: '$(build.artifactstagingdirectory)/$(BuildDefinitionName)'
       preserveTimestamp: true
         
   - task: PublishBuildArtifacts@1
