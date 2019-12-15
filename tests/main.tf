@@ -11,10 +11,6 @@ resource "random_integer" "tester" {
 resource "azurerm_resource_group" "tester" {
   name     = format("rg_test_%s", random_string.tester.result)
   location = var.location
-  tags = {
-    usage       = var.usage
-    environment = var.environment
-  }
 }
 
 module "template" {
