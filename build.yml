@@ -15,7 +15,7 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  Tf.ConfigurationDirectory: 'tests'
+  Tf.ConfigurationDirectory: '$(System.DefaultWorkingDirectory)/tests'
   Subscription: 'MSDN Enterprise'
   Tf.ResourceGroup: 'tfstate'
   Tf.StorageAccount: 'tfdemo001'
