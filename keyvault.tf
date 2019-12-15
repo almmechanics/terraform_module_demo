@@ -1,5 +1,3 @@
-data "azurerm_client_config" "current" {}
-
 resource "azurerm_key_vault" "template" {
   name                = format("kv%03d%03s", var.id, var.environment)
   location            = data.azurerm_resource_group.template.location
