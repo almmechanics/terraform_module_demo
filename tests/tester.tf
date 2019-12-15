@@ -16,7 +16,7 @@ variable "usage" {
 
 resource "random_string" "tester" {
     length = 8
-    override_special = "-_."
+    override_special = "-_"
 }
 
 resource "random_integer" "tester" {
