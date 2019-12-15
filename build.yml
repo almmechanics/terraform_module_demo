@@ -14,6 +14,14 @@ trigger:
 pool:
   vmImage: 'windows-latest'
 
+variables:
+  Tf.ConfigurationDirectory: 'tests'
+  Subscription: 'MSDN Enterprise'
+  Tf.ResourceGroup: 'tfstate'
+  Tf.StorageAccount: 'tfdemo001'
+  Tf.Container: 'tfstate'
+  Tf.Key: 'build'
+
 jobs:
 - job: BuildPipeline
   timeoutInMinutes: 10
@@ -28,18 +36,67 @@ jobs:
     workingDirectory: tf
     displayName: 'Terraform lint'
 
-  - task: PowerShell@2
+  - powershell: 'Install-Module -Name Pester -Force -SkipPublisherCheck -verbose'
+    displayName: 'Update Pester'
+
+  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
+    displayName: 'Install Terraform 0.12.18'
     inputs:
-      displayName: 'Validate JSON files'
-      targetType: 'inline'
-      script: "Invoke-Pester @{Path= './tests/ci/*.tests.ps1';} -OutputFile TEST-CI-JSON.xml -OutputFormat NUnitXML -EnableExit" 
-      timeoutInMinutes: 1
+      terraformVersion: 0.12.18
+
+  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV1@0
+    displayName: 'Terraform init'
+    inputs:
+      workingDirectory: '$(Tf.ConfigurationDirectory)'
+      backendServiceArm: '$(Subscription)'
+      backendAzureRmResourceGroupName: '$(Tf.ResourceGroup)'
+      backendAzureRmStorageAccountName: '$(Tf.StorageAccount)'
+      backendAzureRmContainerName: '$(Tf.Container)'
+      backendAzureRmKey: '$(Tf.Key)'
+
+  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV1@0
+    displayName: 'Terraform plan'
+    inputs:
+      command: plan
+      workingDirectory: '$(Tf.ConfigurationDirectory)'
+      environmentServiceNameAzureRM: '$(Subscription)'
+      backendServiceArm: 'MSDN Enterprise'
+      backendAzureRmResourceGroupName: '$(Tf.ResourceGroup)'
+      backendAzureRmStorageAccountName: '$(Tf.StorageAccount)'
+      backendAzureRmContainerName: '$(Tf.Container)'
+      backendAzureRmKey: '$(Tf.Key)'
+
+  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV1@0
+    displayName: 'Terraform apply'
+    inputs:
+      command: apply
+      workingDirectory: '$(Tf.ConfigurationDirectory)'
+      environmentServiceNameAzureRM: '$(Subscription)'
+      backendServiceArm: 'MSDN Enterprise'
+      backendAzureRmResourceGroupName: '$(Tf.ResourceGroup)'
+      backendAzureRmStorageAccountName: '$(Tf.StorageAccount)'
+      backendAzureRmContainerName: '$(Tf.Container)'
+      backendAzureRmKey: '$(Tf.Key)'
+
+  - task: raul-arrieta.terraform-outputs.terraform-outputs.terraform-outputs@0
+    displayName: 'Terraform Outputs'
+    inputs:
+      workingDirectory: '$(Tf.ConfigurationDirectory)'
+      variablePrefix: tests.
+
+  - task: AzurePowerShell@4
+    displayName: 'BDD Tests for Module'
+    inputs:
+      azureSubscription: '$(Subscription)'
+      ScriptType: InlineScript
+      Inline: |
+      Invoke-Pester @{Path= '$(System.DefaultWorkingDirectory)/tests/ci/*.tests.ps1'; Parameters = @{ResourceGroupName = '$(tests.resource_group_name)'} } -OutputFile $(System.DefaultWorkingDirectory)/TEST-CI-Module.xml -OutputFormat NUnitXML -EnableExit    
+      azurePowerShellVersion: LatestVersion
 
   - task: PublishTestResults@2
-    displayName: 'Publish Test Results **/TEST-*.xml'
+    displayName: 'Publish Test Results'
     inputs:
       testResultsFormat: NUnit
-      timeoutInMinutes: 1
     condition: always()
 
   - task: CopyFiles@2
@@ -48,11 +105,8 @@ jobs:
     inputs:
       SourceFolder: '$(Build.SourcesDirectory)'
       Contents: |
-        tests/**/*
-        examples/**/*
-        !tests/ci/**/*
-        tf/**/*
-        adf/**/*
+        *.tf
+        *.tfvars
         README.md        
         
       TargetFolder: '$(build.artifactstagingdirectory)'
@@ -65,3 +119,16 @@ jobs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: 'drop'
       publishLocation: 'Container'
+
+  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV1@0
+  displayName: 'Terraform destroy'
+  inputs:
+    command: destroy
+    workingDirectory: '$(Tf.ConfigurationDirectory)'
+    environmentServiceNameAzureRM: '$(Subscription)'
+    backendServiceArm: 'MSDN Enterprise'
+    backendAzureRmResourceGroupName: '$(Tf.ResourceGroup)'
+    backendAzureRmStorageAccountName: '$(Tf.StorageAccount)'
+    backendAzureRmContainerName: '$(Tf.Container)'
+    backendAzureRmKey: '$(Tf.Key)'
+  condition: always()

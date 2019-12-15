@@ -41,7 +41,7 @@ Describe "Key vault" {
     Context "Keyvault '$resName' tags" {
     
         It "Keyvault '$resName' has at least two tags" {
-            $kv.Tags.Count | should -BeGreaterOrEqual 2
+            $kv.Tags.Count -ge 2 | should -BeGreaterOrEqual 2
         }
 
         $cases = @{ tag = 'usage' },@{ tag = 'environment' }
