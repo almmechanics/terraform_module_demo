@@ -17,7 +17,6 @@ resource "azurerm_resource_group" "tester" {
   }
 }
 
-
 module "template" {
   source              = "../"
   location            = var.location
