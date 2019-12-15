@@ -28,14 +28,6 @@ jobs:
   displayName: 'Build Pipeline'
   steps:
   
-  - script: 'choco install tflint -y'
-    displayName: 'Install tflint tool'
-    continueOnError: true
-
-  - script: 'tflint --force'
-    workingDirectory: tf
-    displayName: 'Terraform lint'
-
   - powershell: 'Install-Module -Name Pester -Force -SkipPublisherCheck -verbose'
     displayName: 'Update Pester'
 
