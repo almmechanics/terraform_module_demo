@@ -17,8 +17,8 @@ Describe "Resource Group" {
             $rg.Location | should be 'uksouth'
         }
 
-        It "Only one resource exists in '$resName' " {
-            $rg.Count | should be 1
+        It "Two Azure resource exist in '$resName' " {
+            $rg.Count | should be 2
         }
     }
 }
