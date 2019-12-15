@@ -21,4 +21,19 @@ Describe "Resource Group" {
             $res.Count | should be 1
         }
     }
+
+    $rg = Get-AzResourceGroup -ResourceGroupName $ResourceGroupName -ErrorAction SilentlyContinue
+
+    Context "Resource Group '$resName' tags" {
+    
+        It "Resource Group '$resName' has at least two tags" {
+            $rg.Tags.Count | should -BeGreaterOrEqual 2
+        }
+
+        $cases = @{ tag = 'usage' },@{ tag = 'environment' }
+        it "The tag '<tag>' exists in '$resName'" -TestCases $cases {
+            param ( $tag )
+            $rg.Tags.Keys | should contain $tag
+        }
+    }  
 }
