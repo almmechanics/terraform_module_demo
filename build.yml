@@ -1,4 +1,4 @@
-# Demo pipeline
+  # Demo pipeline
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
@@ -90,7 +90,7 @@ jobs:
       azureSubscription: '$(Subscription)'
       ScriptType: InlineScript
       Inline: |
-      Invoke-Pester @{Path= '$(System.DefaultWorkingDirectory)/tests/ci/*.tests.ps1'; Parameters = @{ResourceGroupName = '$(tests.resource_group_name)'} } -OutputFile $(System.DefaultWorkingDirectory)/TEST-CI-Module.xml -OutputFormat NUnitXML -EnableExit      
+        Invoke-Pester @{Path= '$(System.DefaultWorkingDirectory)/tests/ci/*.tests.ps1'; Parameters = @{ResourceGroupName = '$(tests.resource_group_name)'} } -OutputFile $(System.DefaultWorkingDirectory)/TEST-CI-Module.xml -OutputFormat NUnitXML -EnableExit      
       azurePowerShellVersion: LatestVersion
 
   - task: PublishTestResults@2
