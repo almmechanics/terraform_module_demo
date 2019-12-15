@@ -6,23 +6,21 @@ param
 
 Describe "Resource Group" {
 
-    $res = @(Get-AzResource -ResourceGroupName $ResourceGroupName)
-    $resName = $res.name
+    $rg = Get-AzResourceGroup $ResourceGroupName
+    $resName = $rg.ResourceGroupName
     Context "Resource Group common" {
         It "Resource Group '$resName' exists" {
-            $res.count | should not benullorempty
+            $rg | should not benullorempty
         }
 
         It "Resource Group '$resName' located in uksouth" {
-            $res.Location | should be 'uksouth'
+            $rg.Location | should be 'uksouth'
         }
 
         It "Only one resource exists in '$resName' " {
-            $res.Count | should be 1
+            $rg.Count | should be 1
         }
     }
-
-    $rg = Get-AzResourceGroup -ResourceGroupName $ResourceGroupName -ErrorAction SilentlyContinue
 
     Context "Resource Group '$resName' tags" {
     
