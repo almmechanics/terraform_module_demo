@@ -6,7 +6,7 @@ param
 
 Describe "Resource Group" {
 
-    $res = @(Get-AzureRmResource -ResourceGroupName $ResourceGroupName)
+    $res = @(Get-AzResource -ResourceGroupName $ResourceGroupName)
     $resName = $res.name
     Context "Resource Group common" {
         It "Resource Group '$resName' exists" {
