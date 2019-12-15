@@ -12,8 +12,8 @@ trigger:
     - features/*
 
 pool:
-  vmImage: 'windows-latest'
-
+  name: 'private'
+  
 variables:
   Tf.ConfigurationDirectory: '$(System.DefaultWorkingDirectory)/tests'
   Subscription: 'MSDN Enterprise'
