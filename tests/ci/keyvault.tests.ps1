@@ -7,7 +7,7 @@ param
 
 Describe "Key vault" {
 
-    $res = @(Get-AzResource -ResourceType 'Microsoft.KeyVault/vaults' -ResourceGroupName $ResourceGroupName)
+    $res = @(Get-AzureRmResource -ResourceType 'Microsoft.KeyVault/vaults' -ResourceGroupName $ResourceGroupName)
     $resName = $res.name
     Context "Key Vault common" {
         It "Keyvault '$resName' exists" {
@@ -19,7 +19,7 @@ Describe "Key vault" {
         }
     }
 
-    $kv = Get-AzKeyVault -ResourceGroupName $ResourceGroupName -VaultName $resName -ErrorAction SilentlyContinue
+    $kv = Get-AzureKeyVault -ResourceGroupName $ResourceGroupName -VaultName $resName -ErrorAction SilentlyContinue
    
     Context "Keyvault '$resName' configuration" {
         It "Keyvault '$resName' has a Standard SKU" {
