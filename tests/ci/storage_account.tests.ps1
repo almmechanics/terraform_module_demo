@@ -38,8 +38,8 @@ Describe "Storage Account" {
             $sa.AccessTier | should be 'Hot'
         } 
 
-        It "Storage Account '$resName' is using http/https" {
-            $sa.EnableHttpsTrafficOnly | should be 'False'
+        It "Storage Account '$resName' is using https" {
+            $sa.EnableHttpsTrafficOnly | should be 'True'
         } 
     }
 
