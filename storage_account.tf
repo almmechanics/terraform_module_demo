@@ -9,9 +9,9 @@ resource "azurerm_storage_account" "template" {
 
   network_rules {
     default_action = "Deny"
-    bypass         = "AzureServices"
+    bypass         = ["AzureServices"]
   }
-  
+
   tags = {
     usage       = var.usage
     environment = var.environment
