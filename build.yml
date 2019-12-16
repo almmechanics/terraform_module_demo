@@ -24,7 +24,7 @@ variables:
 
 jobs:
 - job: BuildPipeline
-  timeoutInMinutes: 10
+  timeoutInMinutes: 15
   displayName: 'Build Pipeline'
   steps:
   
