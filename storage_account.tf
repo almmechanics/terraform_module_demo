@@ -7,6 +7,11 @@ resource "azurerm_storage_account" "template" {
   account_replication_type  = "GRS"
   enable_https_traffic_only = true
 
+  network_rules {
+    default_action = "Deny"
+    bypass         = "AzureServices"
+  }
+  
   tags = {
     usage       = var.usage
     environment = var.environment

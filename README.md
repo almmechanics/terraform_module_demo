@@ -5,6 +5,7 @@ This repo introduces the concept of a reusable terraform module, with associated
 Capability introduced:
 
 * Keyvault
+* Storage Account
 
 ## Build Configuration
 

@@ -43,6 +43,17 @@ Describe "Storage Account" {
         } 
     }
 
+    Context "Storage Account '$resName' Network configuration" {
+
+        It "Storage Account '$resName' uses a default Deny rule" {
+            $sa.NetworkRuleSet.DefaultAction | should be 'Deny'
+        }
+
+        It "Storage Account '$resName' allows access to AzureServices" {
+            $sa.NetworkRuleSet.Bypass | should be 'AzureServices'
+        }
+    }
+    
     Context "Storage Account '$resName' tags" {
     
         It "Storage Account '$resName' has at least two tags" {
