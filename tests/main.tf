@@ -1,3 +1,7 @@
+terraform{
+  backend "local" {}
+}
+
 resource "random_string" "tester" {
   length           = 8
   override_special = "-_"
