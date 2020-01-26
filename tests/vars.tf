@@ -10,10 +10,10 @@ variable "id" {
 
 variable "environment" {
   description = "Environment name."
-  type = string
+  type        = string
 }
 
 variable "usage" {
   description = "Human friendly tag for this use of this environment."
-  type = string
+  type        = string
 }
